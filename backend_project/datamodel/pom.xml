@@ -1,0 +1,378 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+
+ <parent>
+  <groupId>co.com.loader</groupId>
+  <artifactId>backend_project</artifactId>
+  <version>1.1.11-SNAPSHOT</version>
+ </parent>
+
+ <artifactId>datamodel</artifactId>
+ <dependencies>
+  <dependency>
+   <groupId>log4j</groupId>
+   <artifactId>log4j</artifactId>
+   <version>1.2.14</version>
+  </dependency>
+
+  
+
+  <!-- Import the JPA API, we use provided scope as the API is included in 
+   JBoss WildFly -->
+  <dependency>
+   <groupId>org.hibernate.javax.persistence</groupId>
+   <artifactId>hibernate-jpa-2.1-api</artifactId>
+   <scope>provided</scope>
+  </dependency>
+
+  <dependency>
+   <groupId>org.hibernate</groupId>
+   <artifactId>hibernate-entitymanager</artifactId>
+  </dependency>
+
+  <dependency>
+   <groupId>org.hibernate</groupId>
+   <artifactId>hibernate-core</artifactId>
+  </dependency>
+
+  <dependency>
+   <groupId>org.jboss.resteasy</groupId>
+   <artifactId>resteasy-jaxrs</artifactId>
+   <scope>provided</scope>
+  </dependency>
+
+  <!-- JSR-305 (Bean Validation) Implementation -->
+  <!-- Provides portable constraints such as @Email -->
+  <!-- Hibernate Validator is shipped in JBoss WildFly -->
+  <dependency>
+   <groupId>org.hibernate</groupId>
+   <artifactId>hibernate-validator</artifactId>
+   <scope>provided</scope>
+   <exclusions>
+    <exclusion>
+     <groupId>org.slf4j</groupId>
+     <artifactId>slf4j-api</artifactId>
+    </exclusion>
+   </exclusions>
+  </dependency>
+  <!-- Annotation processor to generate the JPA 2.0 metamodel classes for 
+   typesafe criteria queries -->
+  <dependency>
+   <groupId>org.hibernate</groupId>
+   <artifactId>hibernate-jpamodelgen</artifactId>
+   <scope>provided</scope>
+  </dependency>
+  <!-- Annotation processor that raising compilation errors whenever constraint 
+   annotations are incorrectly used. -->
+  <dependency>
+   <groupId>org.hibernate</groupId>
+   <artifactId>hibernate-validator-annotation-processor</artifactId>
+   <scope>provided</scope>
+  </dependency>
+
+  <dependency>
+   <groupId>org.codehaus.jackson</groupId>
+   <artifactId>jackson-mapper-lgpl</artifactId>
+   <scope>provided</scope>
+  </dependency>
+
+  <dependency>
+   <groupId>log4j</groupId>
+   <artifactId>log4j</artifactId>
+   <version>1.2.14</version>
+  </dependency>
+  <!--JSR 349 : Bean validator -->
+  <dependency>
+   <groupId>org.hibernate</groupId>
+   <artifactId>hibernate-validator</artifactId>
+  </dependency>
+  <dependency>
+   <groupId>org.glassfish</groupId>
+   <artifactId>javax.el</artifactId>
+  </dependency>
+  <dependency>
+   <groupId>org.hibernate</groupId>
+   <artifactId>hibernate-validator-cdi</artifactId>
+   <exclusions>
+    <exclusion>
+     <groupId>dom4j</groupId>
+     <artifactId>dom4j</artifactId>
+    </exclusion>
+   </exclusions>
+  </dependency>
+  <!--FIN JSR 349 : Bean validator -->
+
+
+  <!--<dependency> <groupId>com.oracle</groupId> <artifactId>ojdbc6</artifactId> 
+   <version>11.2.0.3</version> </dependency> <dependency> <groupId>org.liquibase</groupId> 
+   <artifactId>liquibase-core</artifactId> </dependency> -->
+
+  <dependency>
+   <groupId>com.fasterxml.jackson.jaxrs</groupId>
+   <artifactId>jackson-jaxrs-json-provider</artifactId>
+   <version>2.7.3</version>
+  </dependency>
+ </dependencies>
+ <build>
+  <finalName>${project.artifactId}</finalName>
+  <plugins>
+
+
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>${version.compiler.plugin}</version>
+    <configuration>
+     <source>${maven.compiler.source}</source>
+     <target>${maven.compiler.target}</target>
+    </configuration>
+   </plugin>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <version>${version.jar.plugin}</version>
+    <configuration>
+     <includes>
+      <include>**/*</include>
+     </includes>
+    </configuration>
+   </plugin>
+
+
+
+
+  </plugins>
+  <resources>
+   <resource>
+    <directory>src/main/resources_import/${import.sql.dbtype}</directory>
+    <filtering>true</filtering>
+    <!--Filters import.sql -->
+   </resource>
+   <resource>
+    <directory>src/main/resources</directory>
+    <filtering>true</filtering>
+    <!-- Filters persistence.xml -->
+   </resource>
+  </resources>
+ </build>
+
+
+ <profiles>
+  <profile>
+   <id>liquiProfile</id>
+   <dependencies>
+    <dependency>
+     <groupId>com.oracle</groupId>
+     <artifactId>ojdbc6</artifactId>
+    </dependency>
+    <dependency>
+     <groupId>org.liquibase</groupId>
+     <artifactId>liquibase-core</artifactId>
+    </dependency>
+   </dependencies>
+   <build>
+
+
+    <plugins>
+
+
+     <plugin>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-maven-plugin</artifactId>
+      <version>3.5.3</version>
+      <configuration>
+       <changeLogFile>src/main/resources/liquibase/changelog/SCH_REGISTRO_SANITARIO/master.xml</changeLogFile>
+       <driver>oracle.jdbc.driver.OracleDriver</driver>
+       <url>jdbc:oracle:thin:@localhost:1521:xe</url>
+       <username>system</username>
+       <password>Asdf1234</password>
+      </configuration>
+      <executions>
+       <execution>
+        <phase>install</phase>
+        <goals>
+         <goal>update</goal>
+        </goals>
+       </execution>
+      </executions>
+     </plugin>
+
+
+    </plugins>
+   </build>
+  </profile>
+  <profile>
+   <id>liquiDesarollo</id>
+   <dependencies>
+    <dependency>
+     <groupId>com.oracle</groupId>
+     <artifactId>ojdbc6</artifactId>
+    </dependency>
+    <dependency>
+     <groupId>org.liquibase</groupId>
+     <artifactId>liquibase-core</artifactId>
+    </dependency>
+   </dependencies>
+   <build>
+
+
+    <plugins>
+
+
+     <plugin>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-maven-plugin</artifactId>
+      <version>3.5.3</version>
+      <configuration>
+       <changeLogFile>src/main/resources/liquibase/master.xml</changeLogFile>
+       <driver>oracle.jdbc.driver.OracleDriver</driver>
+       <url>jdbc:oracle:thin:@50.23.46.136:1521:xe</url>
+       <username>INVIMA_DEVELOPMENT</username>
+       <password>Asdf1234</password>
+      </configuration>
+      <executions>
+       <execution>
+        <phase>install</phase>
+        <goals>
+         <goal>update</goal>
+        </goals>
+       </execution>
+      </executions>
+     </plugin>
+
+
+    </plugins>
+   </build>
+  </profile>
+  <profile>
+   <id>liquiCalidad</id>
+   <dependencies>
+    <dependency>
+     <groupId>com.oracle</groupId>
+     <artifactId>ojdbc6</artifactId>
+    </dependency>
+    <dependency>
+     <groupId>org.liquibase</groupId>
+     <artifactId>liquibase-core</artifactId>
+    </dependency>
+   </dependencies>
+   <build>
+
+
+    <plugins>
+
+
+     <plugin>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-maven-plugin</artifactId>
+      <version>3.5.3</version>
+      <configuration>
+       <changeLogFile>src/main/resources/liquibase/changelog/SCH_REGISTRO_SANITARIO/master.xml</changeLogFile>
+       <driver>oracle.jdbc.driver.OracleDriver</driver>
+	   <url>jdbc:oracle:thin:@129.150.65.235:1521:invi12c</url>
+       <username>system</username>
+       <password>invi12c</password>
+      </configuration>
+      <executions>
+       <execution>
+        <phase>install</phase>
+        <goals>
+         <goal>update</goal>
+        </goals>
+       </execution>
+      </executions>
+     </plugin>
+
+
+    </plugins>
+   </build>
+  </profile>
+  <profile>
+   <id>liquiClienteDev</id>
+   <dependencies>
+    <dependency>
+     <groupId>com.oracle</groupId>
+     <artifactId>ojdbc6</artifactId>
+    </dependency>
+    <dependency>
+     <groupId>org.liquibase</groupId>
+     <artifactId>liquibase-core</artifactId>
+    </dependency>
+   </dependencies>
+   <build>
+
+
+    <plugins>
+
+
+     <plugin>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-maven-plugin</artifactId>
+      <version>3.5.3</version>
+      <configuration>
+       <changeLogFile>src/main/resources/liquibase/changelog/SCH_REGISTRO_SANITARIO/master.xml</changeLogFile>
+       <driver>oracle.jdbc.driver.OracleDriver</driver>
+	   <url>jdbc:oracle:thin:@172.16.60.93:1521:BDDINV</url>
+       <username>HBT_DESA</username>
+       <password>hbt_des2018</password>
+      </configuration>
+      <executions>
+       <execution>
+        <phase>install</phase>
+        <goals>
+         <goal>update</goal>
+        </goals>
+       </execution>
+      </executions>
+     </plugin>
+
+
+    </plugins>
+   </build>
+  </profile>
+  <profile>
+   <id>liquiCliente</id>
+   <dependencies>
+    <dependency>
+     <groupId>com.oracle</groupId>
+     <artifactId>ojdbc6</artifactId>
+    </dependency>
+    <dependency>
+     <groupId>org.liquibase</groupId>
+     <artifactId>liquibase-core</artifactId>
+    </dependency>
+   </dependencies>
+   <build>
+
+
+    <plugins>
+
+
+     <plugin>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-maven-plugin</artifactId>
+      <version>3.5.3</version>
+      <configuration>
+       <changeLogFile>src/main/resources/liquibase/changelog/SCH_REGISTRO_SANITARIO/master.xml</changeLogFile>
+       <driver>oracle.jdbc.driver.OracleDriver</driver>
+	   <url>jdbc:oracle:thin:@172.16.60.87:1521:BDTINV</url>
+       <username>system</username>
+       <password>Oracle123</password>
+      </configuration>
+      <executions>
+       <execution>
+        <phase>install</phase>
+        <goals>
+         <goal>update</goal>
+        </goals>
+       </execution>
+      </executions>
+     </plugin>
+
+
+    </plugins>
+   </build>
+  </profile>
+ </profiles>
+</project>

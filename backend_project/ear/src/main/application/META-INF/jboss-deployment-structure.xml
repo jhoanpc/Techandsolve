@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+	<deployment>
+		<dependencies>
+			<!-- <module name="javax.ejb.api" />
+			<module name="javax.enterprise.api" /> -->
+			<module name="org.jboss.resteasy.resteasy-jackson-provider" export="true" />
+			<module name="com.oracle.ojdbc.ojdbc6" export="true"/>
+			<!-- <module name="javax.persistence.api"/> <module name="org.hibernate.validator" 
+				/> -->
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>
